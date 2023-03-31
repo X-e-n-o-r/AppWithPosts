@@ -7,12 +7,12 @@ import PostList from './Components/PostList'
 
 function App() {
   const [posts, setPosts] = useState([
-    {id: 1, title: 'have sex', body: 'no'},
-    {id: 2, title: 'have sex', body: 'no'},
-    {id: 3, title: 'have sex', body: 'no'}
+    {id: 1, title: 'c', body: 's'},
+    {id: 2, title: 'a', body: 'r'},
+    {id: 3, title: 'b', body: 'e'}
   ])
 
-  const [selectedSort, setSelect] = useState()
+  const [selectedSort, setSelectedSort] = useState()
   const createPost = (newPost) => {
     setPosts([...posts, newPost])
   }
@@ -22,7 +22,8 @@ function App() {
   }
 
   const sortPosts = (sort) => {
-    console.log(sort)
+    setSelectedSort(sort);
+    setPosts([...posts].sort((a,b) => a[sort].localeCompare(b[sort])))
   }
 
   return (

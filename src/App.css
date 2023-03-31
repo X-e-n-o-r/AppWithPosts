@@ -13,7 +13,7 @@
 }
 
 .post {
-  border: 3px solid rgb(123, 0, 72);
+  border: 4px solid rgb(123, 0, 72);
   border-radius: 30px;
   display: flex;
   justify-content: space-between;
