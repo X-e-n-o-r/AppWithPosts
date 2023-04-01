@@ -8,9 +8,6 @@ import PostFilter from './Components/PostFilter'
 
 function App() {
   const [posts, setPosts] = useState([
-    {id: 1, title: 'c', body: 's'},
-    {id: 2, title: 'a', body: 'r'},
-    {id: 3, title: 'b', body: 'e'}
   ])
 
   const [filter, setFilter] = useState({
