@@ -40,3 +40,15 @@ input {
 .add-btn {
   margin-left: 5px;
 }
+
+select {
+  height: 83px;
+  font-size: 1em;
+  border-radius: 15px;
+  padding-left: 20px;
+  margin-left: 5px;
+}
+
+.createButton {
+  margin-right: 5px;
+}
