@@ -1,6 +1,6 @@
 import React from 'react'
 import PostItem from './PostItem'
-import { TransitionGroup } from 'react-transition-group'
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 
 export default function PostList({posts, title, remove}) {
 

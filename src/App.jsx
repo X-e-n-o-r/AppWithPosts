@@ -6,10 +6,10 @@ import PostItem from './Components/PostItem'
 import PostList from './Components/PostList'
 import PostFilter from './Components/PostFilter'
 import MyModal from './Components/MyModal/MyModal'
+import { usePosts } from './Components/Hooks/usePosts'
 
 function App() {
-  const [posts, setPosts] = useState([
-  ])
+  const [posts, setPosts] = useState([])
 
   const [filter, setFilter] = useState({
     sort: '', query: ''
@@ -17,17 +17,7 @@ function App() {
 
   const [modal, setModal] = useState(false)
 
-  const sortedPosts = useMemo(() => {
-    console.log('rerendered')
-    if (filter.sort) {
-      return [...posts].sort((a,b) => a[filter.sort].localeCompare(b[filter.sort]))
-    }
-    return posts;
-  }, [filter.sort, posts])
-
-  const sortedAndSearchedPosts = useMemo(() => {
-    return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query.toLowerCase()))
-  }, [filter.query, sortedPosts])
+  const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost])
