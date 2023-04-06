@@ -1,4 +1,4 @@
-import { useState , useMemo } from 'react'
+import { useState , useMemo, useEffect } from 'react'
 import './App.css'
 import MySelect from './Components/MySelect'
 import PostForm from './Components/PostForm'
@@ -7,21 +7,33 @@ import PostList from './Components/PostList'
 import PostFilter from './Components/PostFilter'
 import MyModal from './Components/MyModal/MyModal'
 import { usePosts } from './Components/Hooks/usePosts'
+import axios from 'axios'
+import PostService from './API/PostService'
+import Loader from './Loader/Loader'
 
 function App() {
   const [posts, setPosts] = useState([])
-
-  const [filter, setFilter] = useState({
-    sort: '', query: ''
-  })
-
+  const [filter, setFilter] = useState({ sort: '', query: ''})
   const [modal, setModal] = useState(false)
-
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
+  const [isPostLoading, setIsPostLoading] = useState(false)
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost])
     setModal(false)
+  }
+
+  useEffect(() => {
+    fetchPost()
+  }, [filter])
+  
+  async function fetchPost() {
+    setIsPostLoading(true);
+    setTimeout(async () => {
+      const posts = await PostService.getAll();
+      setPosts(posts)
+      setIsPostLoading(false);
+    }, 1000)
   }
 
   const removePost = (post) => {
@@ -40,7 +52,10 @@ function App() {
       </MyModal>
       <PostFilter filter={filter}
                   setFilter={setFilter}/>
-      <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Post list 1"/>
+      {isPostLoading
+        ? <div style={{display: 'flex', justifyContent:'center', marginTop: '150px'}}><Loader /></div>
+        : <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Post list"/>
+      } 
     </div>
   )
 }
