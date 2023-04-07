@@ -1,41 +1,39 @@
 import { useState , useMemo, useEffect } from 'react'
 import './App.css'
-import MySelect from './Components/MySelect'
 import PostForm from './Components/PostForm'
 import PostItem from './Components/PostItem'
 import PostList from './Components/PostList'
 import PostFilter from './Components/PostFilter'
 import MyModal from './Components/MyModal/MyModal'
 import { usePosts } from './Components/Hooks/usePosts'
-import axios from 'axios'
 import PostService from './API/PostService'
 import Loader from './Loader/Loader'
+import { useFetching } from './Components/Hooks/useFetching'
+import { getPageCount } from './Components/utils/pages'
 
 function App() {
   const [posts, setPosts] = useState([])
   const [filter, setFilter] = useState({ sort: '', query: ''})
   const [modal, setModal] = useState(false)
+  const [totalPages, setTotalPages] = useState(0)
+  const [limit, setLimit] = useState(10)
+  const [page, setPage] = useState(1)
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
-  const [isPostLoading, setIsPostLoading] = useState(false)
-
+  const [fetchPosts, isPostLoading, postError] = useFetching(async () => {
+    const response = await PostService.getAll(limit, page);
+    setPosts(response.data)
+    const totalCount = response.headers['x-total-count']
+    setTotalPages(getPageCount(totalCount, limit));
+  })
   const createPost = (newPost) => {
     setPosts([...posts, newPost])
     setModal(false)
   }
 
   useEffect(() => {
-    fetchPost()
-  }, [filter])
-  
-  async function fetchPost() {
-    setIsPostLoading(true);
-    setTimeout(async () => {
-      const posts = await PostService.getAll();
-      setPosts(posts)
-      setIsPostLoading(false);
-    }, 1000)
-  }
-
+    fetchPosts()
+  }, [])
+  console.log(totalPages)
   const removePost = (post) => {
     setPosts(posts.filter(p => p.id !== post.id ))
   }
@@ -52,6 +50,8 @@ function App() {
       </MyModal>
       <PostFilter filter={filter}
                   setFilter={setFilter}/>
+      {postError &&
+        <h1>error ${postError}</h1>}
       {isPostLoading
         ? <div style={{display: 'flex', justifyContent:'center', marginTop: '150px'}}><Loader /></div>
         : <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Post list"/>
