@@ -26,6 +26,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-left: 20px;
 }
 
 input {
@@ -69,4 +70,12 @@ select {
   transform: translateX(-350px);
   transition: all 500ms ease-in;
   opacity: 0;
+}
+
+.pageButton {
+  margin-right: 10px;
+  height: 70px;
+  width: 70px;
+  text-align: center;
+  padding: 0;
 }

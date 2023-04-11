@@ -9,7 +9,7 @@ import { usePosts } from './Components/Hooks/usePosts'
 import PostService from './API/PostService'
 import Loader from './Loader/Loader'
 import { useFetching } from './Components/Hooks/useFetching'
-import { getPageCount } from './Components/utils/pages'
+import { getPageCount, getPagesArray } from './Components/utils/pages'
 
 function App() {
   const [posts, setPosts] = useState([])
@@ -19,6 +19,8 @@ function App() {
   const [limit, setLimit] = useState(10)
   const [page, setPage] = useState(1)
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
+  let pagesArray = getPagesArray(totalPages)
+  console.log(pagesArray)
   const [fetchPosts, isPostLoading, postError] = useFetching(async () => {
     const response = await PostService.getAll(limit, page);
     setPosts(response.data)
@@ -33,7 +35,7 @@ function App() {
   useEffect(() => {
     fetchPosts()
   }, [])
-  console.log(totalPages)
+
   const removePost = (post) => {
     setPosts(posts.filter(p => p.id !== post.id ))
   }
@@ -55,7 +57,10 @@ function App() {
       {isPostLoading
         ? <div style={{display: 'flex', justifyContent:'center', marginTop: '150px'}}><Loader /></div>
         : <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Post list"/>
-      } 
+      }
+      {pagesArray.map(p => 
+        <button className='pageButton'>{p}</button>
+      )}
     </div>
   )
 }
