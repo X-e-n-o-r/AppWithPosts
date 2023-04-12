@@ -20,7 +20,6 @@ function App() {
   const [page, setPage] = useState(1)
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
   let pagesArray = getPagesArray(totalPages)
-  console.log(pagesArray)
   const [fetchPosts, isPostLoading, postError] = useFetching(async () => {
     const response = await PostService.getAll(limit, page);
     setPosts(response.data)
@@ -34,10 +33,14 @@ function App() {
 
   useEffect(() => {
     fetchPosts()
-  }, [])
+  }, [page])
 
   const removePost = (post) => {
     setPosts(posts.filter(p => p.id !== post.id ))
+  }
+
+  const changePage = (page) => {
+    setPage(page)
   }
 
   return (
@@ -59,7 +62,9 @@ function App() {
         : <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Post list"/>
       }
       {pagesArray.map(p => 
-        <button className='pageButton'>{p}</button>
+        <button onClick={() => changePage(p)}
+                key={p} 
+                className={page === p ? 'pageCurrent pageButton' : 'pageButton'}>{p}</button>
       )}
     </div>
   )

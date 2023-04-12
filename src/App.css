@@ -79,3 +79,13 @@ select {
   text-align: center;
   padding: 0;
 }
+
+.pageCurrent {
+  border-color: white;
+  font-weight: bold;
+}
+
+.pageCurrent:hover {
+  border-color: white;
+  font-weight: bold;
+}
